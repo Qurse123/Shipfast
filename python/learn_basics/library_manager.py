@@ -17,7 +17,11 @@ def main():
         print("6. List all books")
         print("0. Exit")
         
-        choice = input("\nChoose an option: ")
+        try:
+            choice = input("\nChoose an option: ")
+        except (EOFError, KeyboardInterrupt):
+            print("\nGoodbye!")
+            break
         
         if choice == "1":
             add_book()
@@ -38,124 +42,186 @@ def main():
             print("Invalid option. Please choose 0-6.")
 
 def add_book():
-   title = input("Enter book title:")
-   author = input ("Enter author name:")
-   year = input("Enter publication year:")
-   update = input("Read or Not Read")
-   rate = input("Rate from 1 to 5")
+    try:
+        title = input("Enter book title: ")
+        author = input("Enter author name: ")
+        year = input("Enter publication year: ")
+        update = input("Read or Not Read: ")
+        rate = input("Rate from 1 to 5: ")
+    except (EOFError, KeyboardInterrupt):
+        print("\nOperation cancelled.")
+        return
    
-   library[title] = {
-    'author': author,
-    'year': year,
-    'update': update,
-    'rate':rate,
-}
-   print(f"{title} added to library")
+    
+    library[title] = {
+        'author': author,
+        'year': year,
+        'update': update,
+        'rate': rate,
+    }
+    print(f"{title} added to library")
 
 
 def remove_book():
-    title = input("Enter book you want to delete")
+    try:
+        title = input("Enter book you want to delete: ")
+    except (EOFError, KeyboardInterrupt):
+        print("\nOperation cancelled.")
+        return
 
-    #verify that book title is in the library
+    # verify that book title is in the library
     if title in library:
         del library[title]
         print("You have deleted this book")
     else:
-        print("book not found!")
-        main()
+        print("Book not found!")
 
 def update_book():
-    title = input("Enter book title:")
-    update = input("Read or not Read?")
+    try:
+        title = input("Enter book title: ")
+        update = input("Read or not Read? ")
+    except (EOFError, KeyboardInterrupt):
+        print("\nOperation cancelled.")
+        return
     
     if title in library:
         print("This book exists! Do you want to update it? (yes or no)")
-        answer = input("yes or no")
+        try:
+            answer = input("yes or no: ")
+        except (EOFError, KeyboardInterrupt):
+            print("\nOperation cancelled.")
+            return
 
         if answer == "yes":
             library[title]['update'] = update
-            print("book has been updated")
+            print("Book has been updated")
         else:
             print("Ok have a good day!")
-            main()
     else:
         print("This book does not exist!")
-        main()
 
 
 def rate_book():
-    title = input("Enter book title:")
-    rate = input ("rate from 1 to 5")
+    try:
+        title = input("Enter book title: ")
+        rate = input("Rate from 1 to 5: ")
+    except (EOFError, KeyboardInterrupt):
+        print("\nOperation cancelled.")
+        return
 
     if title in library:
-        print("This book exists! Do you want to update your rating")
-        answer = input("yes or no")
+        print("This book exists! Do you want to update your rating?")
+        try:
+            answer = input("yes or no: ")
+        except (EOFError, KeyboardInterrupt):
+            print("\nOperation cancelled.")
+            return
         
         if answer == "yes":
             while True:
                 try: 
-                    change_rate = int(input("Rate book from 1 to 5"))
-                    library[title]['rate'] = change_rate
-                    print ("Book has been updated")
-                    break
+                    change_rate = int(input("Rate book from 1 to 5: "))
+                    if 1 <= change_rate <= 5:
+                        library[title]['rate'] = str(change_rate)
+                        print("Book has been updated")
+                        break
+                    else:
+                        print("Please enter a number between 1 and 5")
                 except ValueError:
-                    print ("This is not a number")
-
+                    print("This is not a number")
+                except (EOFError, KeyboardInterrupt):
+                    print("\nOperation cancelled.")
+                    return
         else:
             print("Ok have a good day!")
-            main()
     else:
-        print ("book does not exist")
-        main()
+        print("Book does not exist")
 
 def search_book():
-    title = input("Enter book title:")
+    try:
+        title = input("Enter book title: ")
+    except (EOFError, KeyboardInterrupt):
+        print("\nOperation cancelled.")
+        return
 
     if title in library:
-        print(library[title])
-
-    elif title not in library:
-        print("this book does not exist, would you like to add it?")
-        answer = input("yes or no?")
+        book_info = library[title]
+        print(f"\nBook found:")
+        print(f"Title: {title}")
+        print(f"Author: {book_info['author']}")
+        print(f"Year: {book_info['year']}")
+        print(f"Status: {book_info['update']}")
+        print(f"Rating: {book_info['rate']}")
+    else:
+        print("This book does not exist, would you like to add it?")
+        try:
+            answer = input("yes or no? ")
+        except (EOFError, KeyboardInterrupt):
+            print("\nOperation cancelled.")
+            return
+            
         if answer == "yes":
             add_book()
         else:
             print("Ok, no problem!")
-            main()
 
 def list_all_books():
     if len(library) == 0:
         print("Your Library is empty!")
-        main()
-    
-    for title in library:
-            print(title)
+    else:
+        print("\nYour Library:")
+        print("-" * 50)
+        for title in library:
+            book_info = library[title]
+            print(f"Title: {title}")
+            print(f"Author: {book_info['author']}")
+            print(f"Year: {book_info['year']}")
+            print(f"Status: {book_info['update']}")
+            print(f"Rating: {book_info['rate']}")
+            print("-" * 50)
 
 def filter_books():
-    title = input("Enter book title:")
+    try:
+        title = input("Enter book title: ")
+    except (EOFError, KeyboardInterrupt):
+        print("\nOperation cancelled.")
+        return
+        
     if title not in library:
-        print("this book does not exist, would you like to add it?")
-        answer = input("yes or no?")
+        print("This book does not exist, would you like to add it?")
+        try:
+            answer = input("yes or no? ")
+        except (EOFError, KeyboardInterrupt):
+            print("\nOperation cancelled.")
+            return
+            
         if answer == "yes":
             add_book()
-        else:
-           main()
     else:
-        print("what would you like to filter by")
-        filter = input("rating or author or")
-        if filter == "rating":
-            desired_rating = input("What rating do you want to filter by (1-5): ")
+        print("What would you like to filter by?")
+        try:
+            filter_type = input("rating or author: ")
+        except (EOFError, KeyboardInterrupt):
+            print("\nOperation cancelled.")
+            return
+            
+        if filter_type == "rating":
+            try:
+                desired_rating = input("What rating do you want to filter by (1-5): ")
+            except (EOFError, KeyboardInterrupt):
+                print("\nOperation cancelled.")
+                return
+                
             print(f"\nBooks with {desired_rating} star rating:")
             found_books = False
 
             for title in library:
                 if library[title]['rate'] == desired_rating:
-                    print(title)
+                    print(f"- {title}")
                     found_books = True
             
             if not found_books:
                 print("No books found with that rating.")
-                main()
 
 if __name__ == "__main__":
     print("Welcome to Personal Library Manager!")
