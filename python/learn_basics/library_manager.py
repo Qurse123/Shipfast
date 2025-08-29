@@ -131,6 +131,32 @@ def list_all_books():
     for title in library:
             print(title)
 
+def filter_books():
+    title = input("Enter book title:")
+    if title not in library:
+        print("this book does not exist, would you like to add it?")
+        answer = input("yes or no?")
+        if answer == "yes":
+            add_book()
+        else:
+           main()
+    else:
+        print("what would you like to filter by")
+        filter = input("rating or author or")
+        if filter == "rating":
+            desired_rating = input("What rating do you want to filter by (1-5): ")
+            print(f"\nBooks with {desired_rating} star rating:")
+            found_books = False
+
+            for title in library:
+                if library[title]['rate'] == desired_rating:
+                    print(title)
+                    found_books = True
+            
+            if not found_books:
+                print("No books found with that rating.")
+                main()
+
 if __name__ == "__main__":
     print("Welcome to Personal Library Manager!")
     main()
