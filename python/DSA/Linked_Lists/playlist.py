@@ -34,21 +34,25 @@ class Playlist:
 
     def view_playlist(self):
         """Display all songs in the playlist"""
-        # TODO(human): Implement this method
-        # Hint: Traverse from head and print each song with a number
-        pass
+        Song = self.head ## the Song is the head of this list
+        while Song is not None: ## while song is not none ie there is a value defined by the user input of a song
+            print(Song) ## print the song 
+            Song = Song.next ## go to the next song 
+## this while loop repeats until Song is none then terminates, hence it prints the whole playlist of songs
     
     def search_song(self, title):
         """Search for a song by title in the playlist"""
-        # TODO(human): Implement this method
-        # Hint: Traverse and compare titles, return True/False
-        pass
-    
+        Song = self.head
+        while Song is not None:
+            if Song.title == title:
+                return True
+            else:
+                Song = Song.next
+        return False
+
     def remove_song(self, title):
         """Remove a song from the playlist by title"""
-        # TODO(human): Implement this method
-        # Hint: Handle head deletion separately, then traverse to find and unlink
-        pass
+
     
     def play_next(self):
         """Move to the next song in playlist"""
